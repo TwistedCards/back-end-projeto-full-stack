@@ -48,6 +48,16 @@ public class Usuario implements Serializable{
 	@Column(name = "data_atualizacao", nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataAtualizacao;
 
+	public Usuario() {
+	}
+	
+	public Usuario(String nome, String documento, Conta conta) {
+		super();
+		this.nome = nome;
+		this.documento = documento;
+		this.conta = conta;
+	}
+	
 	public Long getId() {
 		return id;
 	}
