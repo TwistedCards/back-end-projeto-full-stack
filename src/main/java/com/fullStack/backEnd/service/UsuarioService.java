@@ -1,5 +1,8 @@
 package com.fullStack.backEnd.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +20,13 @@ public class UsuarioService {
 		obj = repository.save(obj);
 		return obj;
 	}
+	
+	public List<Usuario> findAll() {
+		return repository.findAll();
+	}
+	
+	public Optional<Usuario> findById(Long id) {
+		return repository.findById(id);
+	}
+	
 }
