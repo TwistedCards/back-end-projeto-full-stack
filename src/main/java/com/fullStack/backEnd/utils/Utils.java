@@ -26,7 +26,7 @@ public class Utils {
 	 */
 	@PostConstruct
 	public void preSalvamentoDados() {
-		Conta conta1 = new Conta("45812719-2", "0351", 10000);
+		Conta conta1 = new Conta("45812719-2", "0351", 100000);
 		contaService.save(conta1);
 		
 		Usuario user1 = new Usuario("Usuario 1", "607.260.970-80", conta1);

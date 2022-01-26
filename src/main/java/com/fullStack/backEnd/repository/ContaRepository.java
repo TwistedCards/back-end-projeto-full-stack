@@ -7,4 +7,5 @@ import com.fullStack.backEnd.model.Conta;
 
 @Repository
 public interface ContaRepository extends JpaRepository<Conta, Long>{
+	Conta findByNumeroConta(String conta);
 }

@@ -46,6 +46,9 @@ public class Transferencia implements Serializable {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataAgendamento;
 
+	public Transferencia() {
+	}
+	
 	public Long getId() {
 		return id;
 	}

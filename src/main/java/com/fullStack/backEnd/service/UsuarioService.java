@@ -21,6 +21,11 @@ public class UsuarioService {
 		return obj;
 	}
 	
+	public Usuario saveR(Usuario obj) {
+		obj = repository.save(obj);
+		return obj;
+	}
+	
 	public List<Usuario> findAll() {
 		return repository.findAll();
 	}

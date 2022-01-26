@@ -1,5 +1,7 @@
 package com.fullStack.backEnd.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,15 @@ public class ContaService {
 	@Autowired
 	private ContaRepository repository;
 	
+	@Transactional
 	public Conta save(Conta obj) {
 		obj.setId(null);
 		obj = repository.save(obj);
 		return obj;
 	}
+	
+	public Conta findByConta(String numeroConta) {
+		return repository.findByNumeroConta(numeroConta);
+	}
+	
 }
