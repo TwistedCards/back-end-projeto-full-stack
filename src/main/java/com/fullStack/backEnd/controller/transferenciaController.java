@@ -55,18 +55,26 @@ public class TransferenciaController {
 	 */
 	@PostMapping(value = "/efetuandoTransferencia")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Transferencia efetuandoTransferencia(@RequestBody @Valid Transferencia transferencia) {
+	public ResponseEntity<Transferencia> efetuandoTransferencia(@RequestBody @Valid Transferencia transferencia) {
 		
 		if(transferencia.getValorTransferido() > 0 && null != transferencia.getContaOrigem()) {
 			user = new Usuario();
+			List<Usuario> listObjUsuario = userService.findAll();
+			
 			transferencia.setDataAgendamento(LocalDate.now());
 
 			// Não estava conseguindo trabalhar com o LocalDate no Angular, então como estou com pouco tempo, decidi converter de String para LocalDate
 			LocalDate dateTransferencia = LocalDate.parse(transferencia.getDataTransferencia());
 			
+			if(null == contaService.findByConta(transferencia.getContaOrigem()) || 
+					null == contaService.findByConta(transferencia.getContaDestino())) {
+				return new ResponseEntity<Transferencia>(transferencia, HttpStatus.BAD_REQUEST);
+			}
+			
 			Conta contaOrigem = contaService.findByConta(transferencia.getContaOrigem());
-
-			List<Usuario> listObjUsuario = userService.findAll();
+			Conta contaDestino = contaService.findByConta(transferencia.getContaDestino());
+			
+			transferencia.setNomeDestino(userService.findByConta(contaDestino).getNome());
 			
 			listObjUsuario.stream()
 							.filter(x -> x.getConta().getId() == contaOrigem.getId())
@@ -77,35 +85,42 @@ public class TransferenciaController {
 			transferencia.setUsuario(user);
 			
 			long diferencaDeDias = transferencia.getDataAgendamento().until(dateTransferencia, ChronoUnit.DAYS);
-			
 			double valorTransferido = transferencia.getValorTransferido();
 			
-			if(dateTransferencia.isEqual(transferencia.getDataAgendamento()) ||
-					(valorTransferido > 0 && valorTransferido <= 1.000)) {
-				
-				Double valorAtualizado = transferenciaService.calculandoTransferenciaA(valorTransferido);
-				transferencia.setValorTransferido(valorAtualizado);
-			} else if((diferencaDeDias > 0 && diferencaDeDias <= 10) || 
-					(valorTransferido > 1.000 && valorTransferido <= 2.000)) {
-				
-				Double valorAtualizado = transferenciaService.calculandoTransferenciaB(valorTransferido);
-				transferencia.setValorTransferido(valorAtualizado);
-			} else if(diferencaDeDias > 10 || valorTransferido > 2.000) {
-				
-				Double valorAtualizado = transferenciaService.calculandoTransferenciaC(valorTransferido, diferencaDeDias);
-				transferencia.setValorTransferido(valorAtualizado);
-			}
+			extractedRegrasDeTransferencia(transferencia, dateTransferencia, diferencaDeDias, valorTransferido);
 			
 			if(user.getConta().getValor() >= transferencia.getValorTransferido()) {
 				if(dateTransferencia.isEqual(transferencia.getDataAgendamento())){
 					extractedSubtracaoValorDaConta(transferencia);
 					userService.saveR(user);
 				}
+				
 				transferencia = transferenciaService.insert(transferencia);
 			}
+		} else {
+			return new ResponseEntity<Transferencia>(transferencia, HttpStatus.BAD_REQUEST);
 		}
 		
-		return transferencia;
+		return new ResponseEntity<Transferencia>(transferencia, HttpStatus.OK);
+	}
+
+	private void extractedRegrasDeTransferencia(Transferencia transferencia, LocalDate dateTransferencia,
+			long diferencaDeDias, double valorTransferido) {
+		if(dateTransferencia.isEqual(transferencia.getDataAgendamento()) ||
+				(valorTransferido > 0 && valorTransferido <= 1.000)) {
+			
+			Double valorAtualizado = transferenciaService.calculandoTransferenciaA(valorTransferido);
+			transferencia.setValorTransferido(valorAtualizado);
+		} else if((diferencaDeDias > 0 && diferencaDeDias <= 10) || 
+				(valorTransferido > 1.000 && valorTransferido <= 2.000)) {
+			
+			Double valorAtualizado = transferenciaService.calculandoTransferenciaB(valorTransferido);
+			transferencia.setValorTransferido(valorAtualizado);
+		} else if(diferencaDeDias > 10 || valorTransferido > 2.000) {
+			
+			Double valorAtualizado = transferenciaService.calculandoTransferenciaC(valorTransferido, diferencaDeDias);
+			transferencia.setValorTransferido(valorAtualizado);
+		}
 	}
 
 	/**

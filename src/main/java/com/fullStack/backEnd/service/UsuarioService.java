@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fullStack.backEnd.model.Conta;
 import com.fullStack.backEnd.model.Usuario;
 import com.fullStack.backEnd.repository.UsuarioRepository;
 
@@ -32,6 +33,10 @@ public class UsuarioService {
 	
 	public Optional<Usuario> findById(Long id) {
 		return repository.findById(id);
+	}
+	
+	public Usuario findByConta(Conta conta) {
+		return repository.findByConta(conta);
 	}
 	
 }

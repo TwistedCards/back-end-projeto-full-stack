@@ -13,6 +13,7 @@ public class TransferenciaDTO implements Serializable {
 	private String contaOrigem;
 	private String contaDestino;
 	private String nome;
+	private String nomeDestino;
 	private String dataTransferencia;
 	private LocalDate dataAgendamento;
 
@@ -28,6 +29,7 @@ public class TransferenciaDTO implements Serializable {
 		this.nome = tranferencia.getUsuario().getNome();
 		this.dataTransferencia = tranferencia.getDataTransferencia();
 		this.dataAgendamento = tranferencia.getDataAgendamento();
+		this.setNomeDestino(tranferencia.getNomeDestino());
 	}
 
 
@@ -85,6 +87,14 @@ public class TransferenciaDTO implements Serializable {
 
 	public void setDataAgendamento(LocalDate dataAgendamento) {
 		this.dataAgendamento = dataAgendamento;
+	}
+
+	public String getNomeDestino() {
+		return nomeDestino;
+	}
+
+	public void setNomeDestino(String nomeDestino) {
+		this.nomeDestino = nomeDestino;
 	}
 
 }

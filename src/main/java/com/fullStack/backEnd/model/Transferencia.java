@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,6 +28,7 @@ public class Transferencia implements Serializable {
 	private Long id;
 
 	@Column(name = "valor_transferido")
+	@NotNull(message = "{campo.valorTransferido.obrigatorio}")
 	private Double valorTransferido;
 
 	@Column(name = "conta_origem")
@@ -37,6 +39,9 @@ public class Transferencia implements Serializable {
 	@NotEmpty(message = "{campo.contaDestino.obrigatorio}")
 	private String contaDestino;
 
+	@Column(name = "nome_destino")
+	private String nomeDestino;
+	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "usuario_id")
@@ -60,14 +65,6 @@ public class Transferencia implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public double getValorTransferido() {
-		return valorTransferido;
-	}
-
-	public void setValorTransferido(double valorTransferido) {
-		this.valorTransferido = valorTransferido;
 	}
 
 	public String getContaOrigem() {
@@ -109,5 +106,21 @@ public class Transferencia implements Serializable {
 	public void setDataAgendamento(LocalDate dataAgendamento) {
 		this.dataAgendamento = dataAgendamento;
 	}
-	
+
+	public String getNomeDestino() {
+		return nomeDestino;
+	}
+
+	public void setNomeDestino(String nomeDestino) {
+		this.nomeDestino = nomeDestino;
+	}
+
+	public Double getValorTransferido() {
+		return valorTransferido;
+	}
+
+	public void setValorTransferido(Double valorTransferido) {
+		this.valorTransferido = valorTransferido;
+	}
+
 }
