@@ -37,5 +37,17 @@ public class Utils {
 		
 		Usuario user2 = new Usuario("Usuario 2", "768.465.510-85", conta2);
 		usuarioService.save(user2);
+		
+		Conta conta3 = new Conta("01198771-2", "0378", 90500);
+		contaService.save(conta3);
+		
+		Usuario user3 = new Usuario("Usuario 3", "189.298.310-95", conta3);
+		usuarioService.save(user3);
+		
+		Conta conta4 = new Conta("596003-2", "0795", 758000);
+		contaService.save(conta4);
+		
+		Usuario user4 = new Usuario("Usuario 4", "118.805.020-62", conta4);
+		usuarioService.save(user4);
 	}
 }
