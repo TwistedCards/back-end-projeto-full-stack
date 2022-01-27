@@ -44,7 +44,7 @@ public class Utils {
 		Usuario user3 = new Usuario("Usuario 3", "189.298.310-95", conta3);
 		usuarioService.save(user3);
 		
-		Conta conta4 = new Conta("596003-2", "0795", 758000);
+		Conta conta4 = new Conta("596003-2", "0795", 75800);
 		contaService.save(conta4);
 		
 		Usuario user4 = new Usuario("Usuario 4", "118.805.020-62", conta4);
