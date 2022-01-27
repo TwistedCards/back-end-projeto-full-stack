@@ -39,7 +39,6 @@ public class Transferencia implements Serializable {
 	private Usuario usuario;
 
 	@Column(name = "data_transferencia")
-	@JsonFormat(pattern = "dd/MM/yyyy")
 	private String dataTransferencia;
 
 	@Column(name = "data_agendamento")
