@@ -1,5 +1,6 @@
 package com.fullStack.backEnd.controller;
 
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,9 +8,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +27,7 @@ import com.fullStack.backEnd.service.UsuarioService;
 
 @RestController
 @RequestMapping(value = "/api/transferencia")
+@CrossOrigin("http://localhost:4200/")
 public class transferenciaController {
 
 	@Autowired
@@ -49,9 +53,15 @@ public class transferenciaController {
 	 */
 	@PostMapping(value = "/efetuandoTransferencia")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Transferencia efetuandoTransferencia(Transferencia transferencia) {
+	public Transferencia efetuandoTransferencia(@RequestBody Transferencia transferencia) {
+		
 		if(transferencia.getValorTransferido() > 0) {
 			user = new Usuario();
+			transferencia.setDataAgendamento(LocalDate.now());
+
+			// Não estava conseguindo trabalhar com o LocalDate no Angular, então como estou com pouco tempo, decidi converter de String para LocalDate
+			LocalDate dateTransferencia = LocalDate.parse(transferencia.getDataTransferencia());
+			
 			Conta contaOrigem = contaService.findByConta(transferencia.getContaOrigem());
 
 			List<Usuario> listObjUsuario = userService.findAll();
@@ -64,12 +74,11 @@ public class transferenciaController {
 			
 			transferencia.setUsuario(user);
 			
-			long diferencaDeDias = transferencia.getDataAgendamento()
-										.until(transferencia.getDataTransferencia(), ChronoUnit.DAYS);
+			long diferencaDeDias = transferencia.getDataAgendamento().until(dateTransferencia, ChronoUnit.DAYS);
 			
 			double valorTransferido = transferencia.getValorTransferido();
 			
-			if(transferencia.getDataTransferencia().isEqual(transferencia.getDataAgendamento()) ||
+			if(dateTransferencia.isEqual(transferencia.getDataAgendamento()) ||
 					(valorTransferido > 0 && valorTransferido <= 1.000)) {
 				
 				Double valorAtualizado = transferenciaService.calculandoTransferenciaA(valorTransferido);
@@ -81,8 +90,7 @@ public class transferenciaController {
 				transferencia.setValorTransferido(valorAtualizado);
 			} else if(diferencaDeDias > 10 || valorTransferido > 2.000) {
 				
-				Double valorAtualizado = transferenciaService.calculandoTransferenciaC(valorTransferido,
-																						diferencaDeDias);
+				Double valorAtualizado = transferenciaService.calculandoTransferenciaC(valorTransferido, diferencaDeDias);
 				transferencia.setValorTransferido(valorAtualizado);
 			}
 			

@@ -40,7 +40,7 @@ public class Transferencia implements Serializable {
 
 	@Column(name = "data_transferencia")
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	private LocalDate dataTransferencia;
+	private String dataTransferencia;
 
 	@Column(name = "data_agendamento")
 	@JsonFormat(pattern = "dd/MM/yyyy")
@@ -89,11 +89,11 @@ public class Transferencia implements Serializable {
 		this.usuario = usuario;
 	}
 
-	public LocalDate getDataTransferencia() {
+	public String getDataTransferencia() {
 		return dataTransferencia;
 	}
 
-	public void setDataTransferencia(LocalDate dataTransferencia) {
+	public void setDataTransferencia(String dataTransferencia) {
 		this.dataTransferencia = dataTransferencia;
 	}
 
