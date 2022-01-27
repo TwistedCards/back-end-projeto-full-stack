@@ -2,8 +2,8 @@ package com.fullStack.backEnd.controller;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -12,13 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fullStack.backEnd.dto.TransferenciaDTO;
 import com.fullStack.backEnd.model.Conta;
 import com.fullStack.backEnd.model.Transferencia;
 import com.fullStack.backEnd.model.Usuario;
@@ -30,7 +30,7 @@ import com.fullStack.backEnd.service.UsuarioService;
 @RestController
 @RequestMapping(value = "/api/transferencia")
 @CrossOrigin("http://localhost:4200/")
-public class transferenciaController {
+public class TransferenciaController {
 
 	@Autowired
 	private UsuarioService userService;
@@ -120,9 +120,11 @@ public class transferenciaController {
 	}
 	
 	@GetMapping(value = "/todasTransferencias")
-	public ResponseEntity<List<Transferencia>> buscandoTodasAsTransferencias() {
-		List<Transferencia> listObj = transfeRepository.findAll();
-		return ResponseEntity.ok().body(listObj);
+	public ResponseEntity<List<TransferenciaDTO>> buscandoTodasAsTransferencias() {
+		List<Transferencia> listTransferencia = transfeRepository.findAll();
+		List<TransferenciaDTO> listDto = listTransferencia.stream().map(obj -> new TransferenciaDTO(obj))
+											.collect(Collectors.toList());
+		return ResponseEntity.ok().body(listDto);
 	}
 	
 }
