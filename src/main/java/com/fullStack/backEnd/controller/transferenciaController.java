@@ -97,30 +97,32 @@ public class transferenciaController {
 			}
 			
 			if(user.getConta().getValor() >= transferencia.getValorTransferido()) {
-				extractedSubtracaoValorDaConta(transferencia);
+				if(dateTransferencia.isEqual(transferencia.getDataAgendamento())){
+					extractedSubtracaoValorDaConta(transferencia);
+					userService.saveR(user);
+				}
 				transferencia = transferenciaService.insert(transferencia);
-				userService.saveR(user);
 			}
 		}
 		
 		return transferencia;
 	}
 
+	/**
+	 *  Caso a transferencia seja feita no mesmo dia, ele irá diminuir o valor da conta origem
+	 * 
+	 * @param transferencia
+	 * @author paulo
+	 */
 	private void extractedSubtracaoValorDaConta(Transferencia transferencia) {
 		double reducaoValorDaConta = user.getConta().getValor() - transferencia.getValorTransferido();
 		user.getConta().setValor(reducaoValorDaConta);
 	}
-
-	@GetMapping(value = "/todasTransferencias/{id}")
-	public ResponseEntity<List<Transferencia>> findAllTransferByIdUser(@PathVariable long id) {
+	
+	@GetMapping(value = "/todasTransferencias")
+	public ResponseEntity<List<Transferencia>> buscandoTodasAsTransferencias() {
 		List<Transferencia> listObj = transfeRepository.findAll();
-		List<Transferencia> listTransferencia = new ArrayList<>();
-		
-		listObj.stream().filter(x -> x.getUsuario().getId() == id).forEach(x -> {
-			listTransferencia.add(x);
-		});
-		
-		return ResponseEntity.ok().body(listTransferencia);
+		return ResponseEntity.ok().body(listObj);
 	}
 	
 }

@@ -33,7 +33,7 @@ public class Transferencia implements Serializable {
 	@NotEmpty(message = "{campo.contaOrigem.obrigatorio}")
 	private String contaOrigem;
 	
-	@Column(name = "valor_destino")
+	@Column(name = "conta_destino")
 	@NotEmpty(message = "{campo.contaDestino.obrigatorio}")
 	private String contaDestino;
 
