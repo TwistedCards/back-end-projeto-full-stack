@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,11 +27,14 @@ public class Transferencia implements Serializable {
 	private Long id;
 
 	@Column(name = "valor_transferido")
-	private double valorTransferido;
+	private Double valorTransferido;
 
 	@Column(name = "conta_origem")
+	@NotEmpty(message = "{campo.contaOrigem.obrigatorio}")
 	private String contaOrigem;
+	
 	@Column(name = "valor_destino")
+	@NotEmpty(message = "{campo.contaDestino.obrigatorio}")
 	private String contaDestino;
 
 	@JsonIgnore
@@ -39,6 +43,8 @@ public class Transferencia implements Serializable {
 	private Usuario usuario;
 
 	@Column(name = "data_transferencia")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@NotEmpty(message = "{campo.dataTransferencia.obrigatorio}")
 	private String dataTransferencia;
 
 	@Column(name = "data_agendamento")

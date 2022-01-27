@@ -5,6 +5,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,9 +55,9 @@ public class transferenciaController {
 	 */
 	@PostMapping(value = "/efetuandoTransferencia")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Transferencia efetuandoTransferencia(@RequestBody Transferencia transferencia) {
+	public Transferencia efetuandoTransferencia(@RequestBody @Valid Transferencia transferencia) {
 		
-		if(transferencia.getValorTransferido() > 0) {
+		if(transferencia.getValorTransferido() > 0 && null != transferencia.getContaOrigem()) {
 			user = new Usuario();
 			transferencia.setDataAgendamento(LocalDate.now());
 
